@@ -49,7 +49,8 @@ public class ScriptGenerationTest {
 
 		controller.processChangeScripts(Long.MAX_VALUE);
 
-		assertEquals(readExpectedFileContents(getExpectedFilename(syntaxName)), writer.toString());
+		// We replace CRLF with LF in case we are on Windows.  If not on Windows, nothing gets replaced
+		assertEquals(readExpectedFileContents(getExpectedFilename(syntaxName)).replace("\r\n", "\n"), writer.toString());
 	}
 
 	private String getExpectedFilename(String dbSyntaxName) {
