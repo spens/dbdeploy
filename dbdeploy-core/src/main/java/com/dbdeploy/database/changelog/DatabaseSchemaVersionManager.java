@@ -18,11 +18,18 @@ public class DatabaseSchemaVersionManager implements AppliedChangesProvider {
 
     private final QueryExecuter queryExecuter;
     private final String changeLogTableName;
+    private final String allowMissingChangeLog;
     private CurrentTimeProvider timeProvider = new CurrentTimeProvider();
 
+    public DatabaseSchemaVersionManager(QueryExecuter queryExecuter, String changeLogTableName, String allowMissingChangeLog) {
+        this.queryExecuter = queryExecuter;
+        this.changeLogTableName = changeLogTableName;
+        this.allowMissingChangeLog = allowMissingChangeLog;
+    }
     public DatabaseSchemaVersionManager(QueryExecuter queryExecuter, String changeLogTableName) {
         this.queryExecuter = queryExecuter;
         this.changeLogTableName = changeLogTableName;
+        this.allowMissingChangeLog = "false";
     }
 
 	public List<Long> getAppliedChanges() {
@@ -40,8 +47,16 @@ public class DatabaseSchemaVersionManager implements AppliedChangesProvider {
 
 			return changeNumbers;
 		} catch (SQLException e) {
-			throw new SchemaVersionTrackingException("Could not retrieve change log from database because: "
-					+ e.getMessage(), e);
+			if (this.allowMissingChangeLog!=null && this.allowMissingChangeLog.toUpperCase().equals("TRUE"))
+			{
+				return null;
+			}
+			else 
+			{
+				throw new SchemaVersionTrackingException("Could not retrieve change log from database because: "
+						+ e.getMessage(), e);
+			}
+			
 		}
 	}
 

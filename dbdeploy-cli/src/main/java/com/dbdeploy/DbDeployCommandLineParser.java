@@ -154,6 +154,11 @@ public class DbDeployCommandLineParser {
 			    .create());
 
 
+	    options.addOption(OptionBuilder
+			    .hasArg()
+			    .withDescription("continue if changelog is missing (your first SQL file should create the changelog), default:false")
+			    .withLongOpt("allowMissingChangelog")
+			    .create("A"));
 		return options;
 	}
 }

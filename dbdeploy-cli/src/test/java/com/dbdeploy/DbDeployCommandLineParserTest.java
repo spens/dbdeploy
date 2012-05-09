@@ -35,7 +35,8 @@ public class DbDeployCommandLineParserTest {
 				"--changeLogTableName my-change-log " +
 				"--dbms ora " +
 				"--templatedir /tmp/mytemplates " +
-				"--delimiter \\ --delimitertype row").split(" "), dbDeploy);
+				"--delimiter \\ --delimitertype row " +
+				"--allowMissingChangelog true").split(" "), dbDeploy);
 
 		assertThat(dbDeploy.getUserid(), is("userid"));
 		assertThat(dbDeploy.getPassword(), is("password"));
@@ -48,6 +49,7 @@ public class DbDeployCommandLineParserTest {
 		assertThat(dbDeploy.getDelimiter(), is("\\"));
 		assertThat(dbDeploy.getDelimiterType(), is(DelimiterType.row));
 		assertThat(dbDeploy.getTemplatedir().getPath(), is(File.separator + "tmp" + File.separator + "mytemplates"));
+		assertThat(dbDeploy.getAllowMissingChangelog(), is("true"));
 	}
 
 	@Test

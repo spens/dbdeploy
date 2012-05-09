@@ -47,7 +47,7 @@ public class Controller {
 	}
 
     private void logStatus(List<ChangeScript> scripts, List<Long> applied, List<ChangeScript> toApply) {
-		info("Changes currently applied to database:\n  " + prettyPrinter.format(applied));
+		info("Changes currently applied to database:\n  " + (applied==null?"n/a - Change log does not exist.":prettyPrinter.format(applied)));
 		info("Scripts available:\n  " + prettyPrinter.formatChangeScriptList(scripts));
 		info("To be applied:\n  " + prettyPrinter.formatChangeScriptList(toApply));
 	}
@@ -59,7 +59,7 @@ public class Controller {
 			if (script.getId() > lastChangeToApply)
 				break;
 
-			if (!applied.contains(script.getId())) {
+			if (applied==null || !applied.contains(script.getId())) {
 				result.add(script);
 			}
 		}

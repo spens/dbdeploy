@@ -31,6 +31,7 @@ public class DbDeploy {
 	private String delimiter = ";";
 	private DelimiterType delimiterType = DelimiterType.normal;
 	private File templatedir;
+	private String allowMissingChangelog;
 
 	public void setDriver(String driver) {
 		this.driver = driver;
@@ -90,7 +91,7 @@ public class DbDeploy {
 		QueryExecuter queryExecuter = new QueryExecuter(url, userid, password);
 
 		DatabaseSchemaVersionManager databaseSchemaVersionManager =
-				new DatabaseSchemaVersionManager(queryExecuter, changeLogTableName);
+				new DatabaseSchemaVersionManager(queryExecuter, changeLogTableName, allowMissingChangelog);
 
 		ChangeScriptRepository changeScriptRepository =
 				new ChangeScriptRepository(new DirectoryScanner(encoding).getChangeScriptsForDirectory(scriptdirectory));
@@ -224,4 +225,13 @@ public class DbDeploy {
 	public LineEnding getLineEnding() {
 		return lineEnding;
 	}
+
+	public String getAllowMissingChangelog() {
+		return allowMissingChangelog;
+	}
+
+	public void setAllowMissingChangelog(String allowMissingChangelog) {
+		this.allowMissingChangelog = allowMissingChangelog;
+	}
+
 }

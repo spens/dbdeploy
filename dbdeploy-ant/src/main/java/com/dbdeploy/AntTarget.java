@@ -28,6 +28,7 @@ public class AntTarget extends Task {
 			+ "\n\t\tchangeLogTableName=\"[CHANGE LOG TABLE NAME]\""
 			+ "\n\t\tdelimiter=\"[STATEMENT DELIMITER - default ;]\""
 			+ "\n\t\tdelimitertype=\"[STATEMENT DELIMITER TYPE - row or normal, default normal]\""
+			+ "\n\t\tallowMissingChangelog=\"[CONTINUE IF CHANGELOG IS MISSING (your first SQL file should create the changelog) - default false]\""
 			+ "\n\t/>"
 			+ "\n\n* - Indicates mandatory parameter";
 
