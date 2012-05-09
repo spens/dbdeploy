@@ -159,6 +159,13 @@ public class DbDeployCommandLineParser {
 			    .withDescription("continue if changelog is missing (your first SQL file should create the changelog), default:false")
 			    .withLongOpt("allowMissingChangelog")
 			    .create("A"));
+
+	    options.addOption(OptionBuilder
+			    .hasArg()
+			    .withDescription("text to replace the phrase '{schema}.' in your SQL code (arg should end with '.')")
+			    .withLongOpt("schema")
+			    .create("S"));
+	    
 		return options;
 	}
 }

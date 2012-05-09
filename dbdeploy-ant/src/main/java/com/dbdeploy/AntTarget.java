@@ -29,6 +29,7 @@ public class AntTarget extends Task {
 			+ "\n\t\tdelimiter=\"[STATEMENT DELIMITER - default ;]\""
 			+ "\n\t\tdelimitertype=\"[STATEMENT DELIMITER TYPE - row or normal, default normal]\""
 			+ "\n\t\tallowMissingChangelog=\"[CONTINUE IF CHANGELOG IS MISSING (your first SQL file should create the changelog) - default false]\""
+			+ "\n\t\tschema=\"[TEXT TO REPLACE THE PHRASE '{schema}.' IN YOUR SQL CODE] (optional, '{schema}.' is removed from SQL if schema arg is not provided) \""
 			+ "\n\t/>"
 			+ "\n\n* - Indicates mandatory parameter";
 
@@ -102,6 +103,14 @@ public class AntTarget extends Task {
 
 	public void setLineEnding(LineEnding lineEnding) {
 		dbDeploy.setLineEnding(lineEnding);
+	}
+
+	public void setSchema(String schema) {
+		dbDeploy.setSchema(schema);
+	}
+	
+	public void setAllowMissingChangelog(String allowMissingChangelog) {
+		dbDeploy.setAllowMissingChangelog(allowMissingChangelog);
 	}
 }
 

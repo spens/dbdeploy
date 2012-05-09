@@ -14,11 +14,20 @@ public class DirectToDbApplier implements ChangeScriptApplier {
 	private final QueryExecuter queryExecuter;
 	private final DatabaseSchemaVersionManager schemaVersionManager;
     private final QueryStatementSplitter splitter;
+    private final String schema;
+
+    public DirectToDbApplier(QueryExecuter queryExecuter, DatabaseSchemaVersionManager schemaVersionManager, QueryStatementSplitter splitter,String schema) {
+		this.queryExecuter = queryExecuter;
+		this.schemaVersionManager = schemaVersionManager;
+        this.splitter = splitter;
+        this.schema = schema;
+    }
 
     public DirectToDbApplier(QueryExecuter queryExecuter, DatabaseSchemaVersionManager schemaVersionManager, QueryStatementSplitter splitter) {
 		this.queryExecuter = queryExecuter;
 		this.schemaVersionManager = schemaVersionManager;
         this.splitter = splitter;
+        this.schema = "";
     }
 
     public void apply(List<ChangeScript> changeScript) {
@@ -50,6 +59,11 @@ public class DirectToDbApplier implements ChangeScriptApplier {
 			try {
 				if (statements.size() > 1) {
 					System.err.println(" -> statement " + (i+1) + " of " + statements.size() + "...");
+				}
+				if (schema!=null && schema.length()>0)
+				{
+					statement=statement.replace("{schema}.", schema);
+					statement=statement.replace("{SCHEMA}.", schema);
 				}
 				queryExecuter.execute(statement);
 			} catch (SQLException e) {

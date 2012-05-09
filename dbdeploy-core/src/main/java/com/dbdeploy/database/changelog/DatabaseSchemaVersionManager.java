@@ -19,23 +19,26 @@ public class DatabaseSchemaVersionManager implements AppliedChangesProvider {
     private final QueryExecuter queryExecuter;
     private final String changeLogTableName;
     private final String allowMissingChangeLog;
+    private final String schema;
     private CurrentTimeProvider timeProvider = new CurrentTimeProvider();
 
-    public DatabaseSchemaVersionManager(QueryExecuter queryExecuter, String changeLogTableName, String allowMissingChangeLog) {
+    public DatabaseSchemaVersionManager(QueryExecuter queryExecuter, String changeLogTableName, String allowMissingChangeLog, String schema) {
         this.queryExecuter = queryExecuter;
         this.changeLogTableName = changeLogTableName;
         this.allowMissingChangeLog = allowMissingChangeLog;
+        this.schema = schema + (schema!=null && schema.length()>0 && !schema.endsWith(".") ? ".":"");  // add trailing period if missing
     }
     public DatabaseSchemaVersionManager(QueryExecuter queryExecuter, String changeLogTableName) {
         this.queryExecuter = queryExecuter;
         this.changeLogTableName = changeLogTableName;
         this.allowMissingChangeLog = "false";
+        this.schema = "";
     }
 
 	public List<Long> getAppliedChanges() {
 		try {
 			ResultSet rs = queryExecuter.executeQuery(
-					"SELECT change_number FROM " + changeLogTableName + "  ORDER BY change_number");
+					"SELECT change_number FROM " + schema+changeLogTableName + "  ORDER BY change_number");
 
 			List<Long> changeNumbers = new ArrayList<Long>();
 
@@ -62,14 +65,14 @@ public class DatabaseSchemaVersionManager implements AppliedChangesProvider {
 
     public String getChangelogDeleteSql(ChangeScript script) {
 		return String.format(
-			"DELETE FROM " + changeLogTableName + " WHERE change_number = %d",
+			"DELETE FROM " + schema+changeLogTableName + " WHERE change_number = %d",
 				script.getId());
 	}
 
     public void recordScriptApplied(ChangeScript script) {
         try {
             queryExecuter.execute(
-                    "INSERT INTO " + changeLogTableName + " (change_number, complete_dt, applied_by, description)" +
+                    "INSERT INTO " + schema+changeLogTableName + " (change_number, complete_dt, applied_by, description)" +
                             " VALUES (?, ?, ?, ?)",
                     script.getId(),
                     new Timestamp(timeProvider.now().getTime()),

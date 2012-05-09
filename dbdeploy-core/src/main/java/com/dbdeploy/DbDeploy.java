@@ -32,6 +32,7 @@ public class DbDeploy {
 	private DelimiterType delimiterType = DelimiterType.normal;
 	private File templatedir;
 	private String allowMissingChangelog;
+	private String schema="";
 
 	public void setDriver(String driver) {
 		this.driver = driver;
@@ -91,7 +92,7 @@ public class DbDeploy {
 		QueryExecuter queryExecuter = new QueryExecuter(url, userid, password);
 
 		DatabaseSchemaVersionManager databaseSchemaVersionManager =
-				new DatabaseSchemaVersionManager(queryExecuter, changeLogTableName, allowMissingChangelog);
+				new DatabaseSchemaVersionManager(queryExecuter, changeLogTableName, allowMissingChangelog, schema);
 
 		ChangeScriptRepository changeScriptRepository =
 				new ChangeScriptRepository(new DirectoryScanner(encoding).getChangeScriptsForDirectory(scriptdirectory));
@@ -107,7 +108,7 @@ public class DbDeploy {
 			splitter.setDelimiter(getDelimiter());
 			splitter.setDelimiterType(getDelimiterType());
 			splitter.setOutputLineEnding(lineEnding);
-			doScriptApplier = new DirectToDbApplier(queryExecuter, databaseSchemaVersionManager, splitter);
+			doScriptApplier = new DirectToDbApplier(queryExecuter, databaseSchemaVersionManager, splitter, schema);
 		}
 
 		ChangeScriptApplier undoScriptApplier = null;
@@ -234,4 +235,12 @@ public class DbDeploy {
 		this.allowMissingChangelog = allowMissingChangelog;
 	}
 
+	public String getSchema() {
+		return schema;
+	}
+
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+	
 }
